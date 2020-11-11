@@ -28,15 +28,30 @@ object bb {
     //multi input file TODO
 
     val seperateTF = textFile.map(line=>line.split(" ")).collect().toSeq
-    val columnsData = sc.parallelize(seperateTF.transpose.zipWithIndex)
+    val columnsData = sc.parallelize({
+      val temp = seperateTF.transpose
+      temp.foreach(x =>
+        x.min +: x.max +: x
+      )
+      temp.zipWithIndex
+    })
 
+    val typeIntData = columnsData.filter(line => isTypeInt(line._1) == true)
     val typeNoIntData = columnsData.filter(line => isTypeInt(line._1) == false)
                                   //  .map(line=>(line._1.sorted,line._2)) //sort!
     //typeNoIntData.collect.foreach((a) => println(a._1(0),a._2))
+    //typeIntData.max()
+    val newtypeIntData = typeIntData.map(a => {
 
+    })
+    val baseIntData = sc.broadcast(typeIntData.collect)
     val baseNoIntData = sc.broadcast(typeNoIntData.collect)
 
+
     val ind = typeNoIntData.map(line =>
+      calculateInd(line, baseNoIntData.value)
+    )
+    val ind2 = typeIntData.map(line =>
       calculateInd(line, baseNoIntData.value)
     )
     println("ind calc over!")
