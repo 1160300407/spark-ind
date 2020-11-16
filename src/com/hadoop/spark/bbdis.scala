@@ -10,8 +10,7 @@ object bbdis {
   def typeList : Array[String] = Array("string", "int")
   def SAVE_PATH1: String = "/user/litianfeng/output-bb1"
   def SAVE_PATH2: String = "/user/litianfeng/output-bb2"
-  //def MASTER_NAME : String = "spark://219.217.229.74:7070"
-  def MASTER_NAME: String = "local[*]"
+  def MASTER_NAME : String = "spark://219.217.229.74:7070"
   //line中所有string全为数字，则返回true
   def isTypeInt(line: Seq[String]): Boolean = {
     val regex="""^\d+$""".r
@@ -22,9 +21,9 @@ object bbdis {
   def calculateInd(line: (Seq[String], Int), base: Array[(Seq[String], Int)])  = {
     val lhs = Array(line._2)
     val rhss = base.filter(x => {
-      val rhs = x._1.toSet
-      line._1.forall(s => rhs.contains(s))
-    }).map(x => x._2)
+                val rhs = x._1.toSet
+                line._1.forall(s => rhs.contains(s))
+              }).map(x => x._2)
     concat(lhs, rhss)
   }
 
@@ -47,7 +46,7 @@ object bbdis {
     //用typeIntData存储所有数字属性数据 NoInt存储字符
     val typeIntData = columnsData.filter(line => isTypeInt(line._1) == true)
     val typeNoIntData = columnsData.filter(line => isTypeInt(line._1) == false)
-    //  .map(line=>(line._1.sorted,line._2)) //sort!
+                                  //  .map(line=>(line._1.sorted,line._2)) //sort!
     //将两类数据全部发送到所有节点
     val baseIntData = sc.broadcast(typeIntData.collect)
     val baseNoIntData = sc.broadcast(typeNoIntData.collect)
@@ -60,7 +59,8 @@ object bbdis {
       calculateInd(line, baseNoIntData.value)
     )
 
-    println("ind calc over!")
-    ind.collect().foreach(println)
+    //println("ind calc over!")
+    ind.saveAsTextFile(SAVE_PATH1)
+    ind2.saveAsTextFile(SAVE_PATH2)
   }
 }

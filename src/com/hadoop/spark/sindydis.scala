@@ -6,8 +6,7 @@ object sindydis {
   //def FILE_NAME : String = "file:///Users/litianfeng/Documents/scop.txt"
   def FILE_NAME : String = "/user/litianfeng/input/scop.txt"
   def APP_NAME : String = "sindy"
-  //def MASTER_NAME : String = "spark://219.217.229.74:7070"
-  def MASTER_NAME: String = ""
+  def MASTER_NAME : String = "spark://219.217.229.74:7070"
   //def SAVE_PATH: String = "/Users/litianfeng/Documents/ind"
   def SAVE_PATH: String = "/user/litianfeng/output-sindy"
 
@@ -34,16 +33,15 @@ object sindydis {
 
     //对每个value对应的set，生成candidates， i -> (All - i)
     val candidate = value2attrs.flatMap(a => {
-      var amap: Map[Int, Set[Int]] = Map()
-      for (i <- a._2) {
-        amap += (i -> (a._2 - i))
-      }
-      amap
+        var amap: Map[Int, Set[Int]] = Map()
+        for (i <- a._2) {
+          amap += (i -> (a._2 - i))
+        }
+        amap
     })
 
     //对相同index的candidate进行聚合，用集合交
     val ind = candidate.reduceByKey((a, b) => a.intersect(b))
-    ind.collect().foreach(println)
-    //ind.saveAsTextFile(SAVE_PATH)
+    ind.saveAsTextFile(SAVE_PATH)
   }
 }
