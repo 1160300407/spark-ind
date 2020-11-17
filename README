@@ -1,18 +1,40 @@
 四个文件描述：
-bb：B&B算法单机版代码，目前支持将属性划分为两种：纯数字列、字符串，
-       参数设置：
-            def FILE_NAME : String = "/user/litianfeng/input/scop.txt"
-                即读取文件的位置
+单机版代码将读取参数的第一个字符串args(0)做为文件输入的路径，并且不进行落盘的写操作，只会将结果打印到控制台。
+单机版运行时需要run configuration 加入输入文件的路径，多个文件用","隔开。
+本地文件的路径示例如下：
+    file:///Users/litianfeng/Documents/scop.txt
 
-            def SAVE_PATH1: String = "/user/litianfeng/output-bb1"
-            def SAVE_PATH2: String = "/user/litianfeng/output-bb2"
-                两个属性类别分别的uind结果存储的目录，要求该目录应不存在，将由spark自动创建并写入结果
-            def MASTER_NAME: String = "local[*]"
-                将启动本地和cpu核数相同数量的线程。
-
-bbdis：B&B算法集群代码，修改了bb上述的四个参数
-sindy：Sindy算法单机版代码，参数设置与bb类似
+bb（暴力比较）：B&B算法单机版代码，目前支持将属性划分为两种：纯数字列、字符串，
+bbdis：B&B算法集群代码
+sindy（倒排）：Sindy算法单机版代码
 sindydis：Sindy算法集群代码
 
 运行方式：
     每个.scala都自带main函数，IDEA环境下直接运行即可（依赖scala-jdk和spark jar包）。
+    注意单机版代码需要运行参数，或者将sindy.scala的第21行/bb.scala的第40行的args(0)替换为上文所述的本地文件路径字符串，如：
+        "file:///Users/litianfeng/Documents/scop.txt"
+
+数据：
+1. scop.txt	3M
+2. adult.data adult.test  5.3M
+2. main.py 生成lhs.csv rhs.csv  900M
+
+集群版代码可以在spark-shell上运行并落盘到hdfs上，但使用打包jar包发送到hdfs并spark-submit部署作业时，出现class not found等错误，还在debug。
+    目前分析可能错误原因：
+        1。打包的依赖有问题
+        2。spark-submit的格式，指定的class有问题
+        3。主函数里面，新建了SparkContext等对象，是否和集群已有的环境冲突
+
+现有集群上spark-shell运行两个算法的初步观察结果：
+    1，scop 3M的数据：
+            bb算法运行50s
+            sindy运行2s
+    2，adult.data adult.test数据：
+            sindy运行4s
+    3，lhs.csv rhs.csv数据：
+            sindy运行8s
+
+TODO:
+    1.后两个数据有点问题，行列不对齐，用bb算法转置出错，需要额外进行数据处理, 看bb算法能不能跑大一点的。
+    2.spark-submit 进行控制参数，以及查看进程状态
+

@@ -3,6 +3,8 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/SparkFirst.iml" filepath="$PROJECT_DIR$/SparkFirst.iml" />
+      <module fileurl="file://$PROJECT_DIR$/bbdis/bbdis.iml" filepath="$PROJECT_DIR$/bbdis/bbdis.iml" />
+      <module fileurl="file://$PROJECT_DIR$/sindydis/sindydis.iml" filepath="$PROJECT_DIR$/sindydis/sindydis.iml" />
     </modules>
   </component>
 </project>
