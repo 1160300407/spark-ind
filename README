@@ -1,0 +1,18 @@
+四个文件描述：
+bb：B&B算法单机版代码，目前支持将属性划分为两种：纯数字列、字符串，
+       参数设置：
+            def FILE_NAME : String = "/user/litianfeng/input/scop.txt"
+                即读取文件的位置
+
+            def SAVE_PATH1: String = "/user/litianfeng/output-bb1"
+            def SAVE_PATH2: String = "/user/litianfeng/output-bb2"
+                两个属性类别分别的uind结果存储的目录，要求该目录应不存在，将由spark自动创建并写入结果
+            def MASTER_NAME: String = "local[*]"
+                将启动本地和cpu核数相同数量的线程。
+
+bbdis：B&B算法集群代码，修改了bb上述的四个参数
+sindy：Sindy算法单机版代码，参数设置与bb类似
+sindydis：Sindy算法集群代码
+
+运行方式：
+    每个.scala都自带main函数，IDEA环境下直接运行即可（依赖scala-jdk和spark jar包）。
