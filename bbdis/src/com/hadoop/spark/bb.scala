@@ -4,13 +4,13 @@ import org.apache.spark.SparkContext
 import scala.Array.concat
 
 object bb {
-  //def FILE_NAME : String = "file:///Users/litianfeng/Documents/scop.txt"
+  def FILE_NAME : String = "file:///Users/litianfeng/Documents/scop.txt"
   //def FILE_NAME: String = "/user/litianfeng/input/scop.txt"
 
   def APP_NAME: String = "b&b"
   def typeList: Array[String] = Array("string", "int")
-  def SAVE_PATH1: String = "/user/litianfeng/output-bb1"
-  def SAVE_PATH2: String = "/user/litianfeng/output-bb2"
+  //def SAVE_PATH1: String = "/user/litianfeng/output-bb4scop"
+  //def SAVE_PATH2: String = "/user/litianfeng/output-bb4scop"
   def MASTER_NAME: String = "local[*]"
   //line中所有string全为数字，则返回true
   def isTypeInt(line: Seq[String]): Boolean = {
@@ -23,7 +23,7 @@ object bb {
     val lhs = Array(line._2)
     val rhss = base.filter(x => {
       val rhs = x._1.toSet
-      line._1.forall(s => rhs.contains(s))
+      (line._2 != x._2).&&(line._1.forall(s => rhs.contains(s)))
     }).map(x => x._2)
     concat(lhs, rhss)
   }
@@ -31,7 +31,7 @@ object bb {
   def main(args: Array[String]): Unit = {
     val conf = new SparkConf().setAppName(APP_NAME).setMaster(MASTER_NAME)
     val sc = new SparkContext(conf)
-    val textFile = sc.textFile(args(0))
+    val textFile = sc.textFile(FILE_NAME)
 
     //分隔开
     val seperateTF = textFile.map(line => line.split(" ")).collect().toSeq
@@ -57,14 +57,16 @@ object bb {
       calculateInd(line, baseNoIntData.value)
     )
     val ind2 = typeIntData.map(line =>
-      calculateInd(line, baseNoIntData.value)
+      calculateInd(line, baseIntData.value)
     )
 
     println("ind calc over!")
-    ind.collect().foreach(x=>
-      {println(x(0)+":"+x.mkString(","))})
-    ind2.collect().foreach(x=>
-    {println(x(0)+":"+x.mkString(","))})
+    ind.collect()
+       .filter(x => x.length > 1)
+       .foreach(x=> {println(x(0)+":"+x.drop(1).mkString(","))})
+    ind2.collect()
+        .filter(x => x.length > 1)
+        .foreach(x=>{println(x(0)+":"+x.drop(1).mkString(","))})
     //ind2.collect().foreach(println)
   }
 }

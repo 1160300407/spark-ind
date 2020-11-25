@@ -21,7 +21,7 @@ object bbdis {
     val lhs = Array(line._2)
     val rhss = base.filter(x => {
       val rhs = x._1.toSet
-      line._1.forall(s => rhs.contains(s))
+      (line._2 != x._2).&&(line._1.forall(s => rhs.contains(s)))
     }).map(x => x._2)
     concat(lhs, rhss)
   }
@@ -55,14 +55,17 @@ object bbdis {
       calculateInd(line, baseNoIntData.value)
     ).cache()
     val ind2 = typeIntData.map(line =>
-      calculateInd(line, baseNoIntData.value)
+      calculateInd(line, baseIntData.value)
     ).cache()
 
-    ind.collect().foreach(x=>
-    {println(x(0)+":"+x.mkString(","))})
-    ind2.collect().foreach(x=>
-    {println(x(0)+":"+x.mkString(","))})
-    //println("ind calc over!")
+    println("ind calc over!")
+    ind.collect()
+      .filter(x => x.length > 1)
+      .foreach(x=> {println(x(0)+":"+x.drop(1).mkString(","))})
+    ind2.collect()
+      .filter(x => x.length > 1)
+      .foreach(x=>{println(x(0)+":"+x.drop(1).mkString(","))})
+
     ind.saveAsTextFile(args(1)+"-type1")
     ind2.saveAsTextFile(args(1)+"-type2")
     //ind2.saveAsTextFile(SAVE_PATH2)
