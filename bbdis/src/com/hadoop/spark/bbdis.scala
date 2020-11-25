@@ -4,18 +4,11 @@ import org.apache.spark.SparkContext
 import scala.Array.concat
 
 object bbdis {
-  //def FILE_NAME : String = "file:///Users/litianfeng/Documents/scop.txt"
   def FILE_NAME: String = "/user/litianfeng/input/scop.txt"
-
   def APP_NAME: String = "b&b"
-
   def typeList: Array[String] = Array("string", "int")
 
   def SAVE_PATH1: String = "/user/litianfeng/output-bb1"
-
-  def SAVE_PATH2: String = "/user/litianfeng/output-bb2"
-
-  def MASTER_NAME: String = "spark://master.cluster:7077"
 
   //line中所有string全为数字，则返回true
   def isTypeInt(line: Seq[String]): Boolean = {
@@ -34,9 +27,9 @@ object bbdis {
   }
 
   def main(args: Array[String]): Unit = {
-    val conf = new SparkConf().setAppName(APP_NAME).setMaster(MASTER_NAME)
+    val conf = new SparkConf().setAppName(APP_NAME)
     val sc = new SparkContext(conf)
-    val textFile = sc.textFile(FILE_NAME)
+    val textFile = sc.textFile(args(0))
 
     //分隔开
     val seperateTF = textFile.map(line => line.split(" ")).collect().toSeq
@@ -60,13 +53,18 @@ object bbdis {
     //两类数据分别计算ind
     val ind = typeNoIntData.map(line =>
       calculateInd(line, baseNoIntData.value)
-    )
+    ).cache()
     val ind2 = typeIntData.map(line =>
       calculateInd(line, baseNoIntData.value)
-    )
+    ).cache()
 
+    ind.collect().foreach(x=>
+    {println(x(0)+":"+x.mkString(","))})
+    ind2.collect().foreach(x=>
+    {println(x(0)+":"+x.mkString(","))})
     //println("ind calc over!")
-    ind.saveAsTextFile(SAVE_PATH1)
-    ind2.saveAsTextFile(SAVE_PATH2)
+    ind.saveAsTextFile(args(1)+"-type1")
+    ind2.saveAsTextFile(args(1)+"-type2")
+    //ind2.saveAsTextFile(SAVE_PATH2)
   }
 }

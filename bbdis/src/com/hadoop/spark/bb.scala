@@ -8,16 +8,10 @@ object bb {
   //def FILE_NAME: String = "/user/litianfeng/input/scop.txt"
 
   def APP_NAME: String = "b&b"
-
   def typeList: Array[String] = Array("string", "int")
-
   def SAVE_PATH1: String = "/user/litianfeng/output-bb1"
-
   def SAVE_PATH2: String = "/user/litianfeng/output-bb2"
-
-  //def MASTER_NAME : String = "spark://219.217.229.74:7070"
   def MASTER_NAME: String = "local[*]"
-
   //line中所有string全为数字，则返回true
   def isTypeInt(line: Seq[String]): Boolean = {
     val regex = """^\d+$""".r

@@ -1,9 +1,9 @@
 <component name="ArtifactManager">
-  <artifact name="bbdis:jar">
-    <output-path>$PROJECT_DIR$/out/artifacts/bbdis_jar</output-path>
+  <artifact name="sindydis:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/sindydis_jar</output-path>
     <root id="root">
-      <element id="archive" name="bbdis.jar">
-        <element id="module-output" name="bbdis" />
+      <element id="archive" name="sindydis.jar">
+        <element id="module-output" name="sindydis" />
       </element>
       <element id="library" level="project" name="jars" />
       <element id="library" level="project" name="scala-sdk-2.11" />

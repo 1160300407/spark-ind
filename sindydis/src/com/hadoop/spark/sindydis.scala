@@ -3,23 +3,14 @@ package com.hadoop.spark
 import org.apache.spark.{SparkConf, SparkContext}
 
 object sindydis {
-  //def FILE_NAME : String = "file:///Users/litianfeng/Documents/scop.txt"
   def FILE_NAME : String = "/user/litianfeng/input/adult.data,/user/litianfeng/input/adult.test"
-
   //def FILE_NAME: String = "/user/litianfeng/input/scop.txt"
-
-
-  def APP_NAME: String = "sindy"
-
-  def MASTER_NAME: String = "spark://master.cluster:7077"
-
-  //def SAVE_PATH: String = "/Users/litianfeng/Documents/ind"
   def SAVE_PATH: String = "/user/litianfeng/output-sindy"
-
+  def APP_NAME: String = "sindy"
   def main(args: Array[String]): Unit = {
-    val conf = new SparkConf().setAppName(APP_NAME).setMaster(MASTER_NAME)
+    val conf = new SparkConf().setAppName(APP_NAME)
     val sc = new SparkContext(conf)
-    val textFile = sc.textFile(FILE_NAME)
+    val textFile = sc.textFile(args(0))
     //对每个value不加区分的生成倒排索引
     val value2attr = textFile.flatMap(line => {
       val words = line.split(" ")
@@ -47,7 +38,8 @@ object sindydis {
     })
 
     //对相同index的candidate进行聚合，用集合交
-    val ind = candidate.reduceByKey((a, b) => a.intersect(b))
-    ind.saveAsTextFile(SAVE_PATH)
+    val ind = candidate.reduceByKey((a, b) => a.intersect(b)).cache()
+    ind.collect().foreach(println)
+    ind.saveAsTextFile(args(1))
   }
 }

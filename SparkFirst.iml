@@ -7,7 +7,7 @@
     </content>
     <orderEntry type="jdk" jdkName="1.8" jdkType="JavaSDK" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" exported="" name="scala-sdk-2.13.3" level="project" />
+    <orderEntry type="library" exported="" name="scala-sdk-2.11" level="project" />
     <orderEntry type="library" exported="" name="jars" level="project" />
   </component>
 </module>
