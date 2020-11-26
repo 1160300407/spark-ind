@@ -1,8 +1,8 @@
 四个文件描述：
-单机版代码将读取参数的第一个字符串args(0)做为文件输入的路径，并且不进行落盘的写操作，只会将结果打印到控制台。
-单机版运行时需要run configuration 加入输入文件的路径，多个文件用","隔开。
-本地文件的路径示例如下：
-    file:///Users/litianfeng/Documents/scop.txt
+单机版代码将读取参数的第一个字符串args(0)做为文件输入的目录（将读取目录下所有文件），并且不进行落盘的写操作，只会将结果打印到控制台。
+单机版运行时需要run configuration 加入输入文件的目录，文件命名应有后缀，文件内容每行中的数据用空格隔开，最后一行后无换行符。
+本地文件路径示例如下：
+    file:///Users/litianfeng/Documents/scop
 
 bb（暴力比较）：B&B算法单机版代码，目前支持将属性划分为两种：纯数字列、字符串，
 bbdis：B&B算法集群代码
@@ -11,30 +11,19 @@ sindydis：Sindy算法集群代码
 
 运行方式：
     每个.scala都自带main函数，IDEA环境下直接运行即可（依赖scala-jdk和spark jar包）。
-    注意单机版代码需要运行参数，或者将sindy.scala的第21行/bb.scala的第40行的args(0)替换为上文所述的本地文件路径字符串，如：
-        "file:///Users/litianfeng/Documents/scop.txt"
+    注意单机版代码需要运行参数，将sindy.scala/bb.scala的args(0)替换为上文所述的本地文件路径，或直接添加至run configurations，如：
+        "file:///Users/litianfeng/Documents/scop"
 
 数据：
 1. scop.txt	3M
 2. adult.data adult.test  5.3M
 2. main.py 生成lhs.csv rhs.csv  900M
 
-集群版代码可以在spark-shell上运行并落盘到hdfs上，但使用打包jar包发送到hdfs并spark-submit部署作业时，出现class not found等错误，还在debug。
-    目前分析可能错误原因：
-        1。打包的依赖有问题
-        2。spark-submit的格式，指定的class有问题
-        3。主函数里面，新建了SparkContext等对象，是否和集群已有的环境冲突
-
-现有集群上spark-shell运行两个算法的初步观察结果：
-    1，scop 3M的数据：
-            bb算法运行50s
-            sindy运行2s
-    2，adult.data adult.test数据：
-            sindy运行4s
-    3，lhs.csv rhs.csv数据：
-            sindy运行8s
+RECENTLY DONE：
+    1.部署版本不兼容问题，可以发布应用部署。
+    2.解决了sindy算法多个文件输入的运行时错误和区分不同列的序号问题。
 
 TODO:
-    1.后两个数据有点问题，行列不对齐，用bb算法转置出错，需要额外进行数据处理, 看bb算法能不能跑大一点的。
-    2.spark-submit 进行控制参数，以及查看进程状态
+    1.bb算法多文件还有bug
+    2.全部部署运行app，然后在端口查看运行时间状态和效率与论文是否匹配。
 

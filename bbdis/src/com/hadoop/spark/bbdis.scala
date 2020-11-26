@@ -7,7 +7,6 @@ object bbdis {
   def FILE_NAME: String = "/user/litianfeng/input/scop.txt"
   def APP_NAME: String = "b&b"
   def typeList: Array[String] = Array("string", "int")
-
   def SAVE_PATH1: String = "/user/litianfeng/output-bb1"
 
   //line中所有string全为数字，则返回true
