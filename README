@@ -1,18 +1,19 @@
-四个文件描述：
-单机版代码将读取参数的第一个字符串args(0)做为文件输入的目录（将读取目录下所有文件），并且不进行落盘的写操作，只会将结果打印到控制台。
-单机版运行时需要run configuration 加入输入文件的目录，文件命名应有后缀，文件内容每行中的数据用空格隔开，最后一行后无换行符。
+两个文件描述：
+bbdis.scala（暴力比较）：B&B算法代码，目前支持将属性划分为两种：纯数字列、字符串，
+sindy.scala（倒排）：Sindy算法代码
+
+运行参数解释：
+    1.args(0)为部署模式，"local"是将本地运行，其它默认为集群运行。
+    2.args(1)为文件输入的目录（将读取目录下所有文件），目录下的所有文件命名应有后缀，文件内容每行中的数据用空格隔开，最后一行后无换行符。
+    3.args(2)为文件输出的目录，可缺省，此时不会写盘。
+
 本地文件路径示例如下：
     file:///Users/litianfeng/Documents/scop
 
-bb（暴力比较）：B&B算法单机版代码，目前支持将属性划分为两种：纯数字列、字符串，
-bbdis：B&B算法集群代码
-sindy（倒排）：Sindy算法单机版代码
-sindydis：Sindy算法集群代码
-
 运行方式：
     每个.scala都自带main函数，IDEA环境下直接运行即可（依赖scala-jdk和spark jar包）。
-    注意单机版代码需要运行参数，将sindy.scala/bb.scala的args(0)替换为上文所述的本地文件路径，或直接添加至run configurations，如：
-        "file:///Users/litianfeng/Documents/scop"
+    注意运行需要参数，将符合上述要求的参数添加至run configurations，如：
+        "local file:///Users/litianfeng/Documents/scop "
 
 数据：
 1. scop.txt	3M
@@ -22,8 +23,7 @@ sindydis：Sindy算法集群代码
 RECENTLY DONE：
     1.部署版本不兼容问题，可以发布应用部署。
     2.解决了sindy算法多个文件输入的运行时错误和区分不同列的序号问题。
-
+    3.修复了一些多个文件输入出现的计算错误。
 TODO:
-    1.bb算法多文件还有bug
-    2.全部部署运行app，然后在端口查看运行时间状态和效率与论文是否匹配。
+    1.全部部署运行app，然后在端口查看运行时间状态和效率与论文是否匹配。
 
