@@ -1,3 +1,7 @@
 *.jar
 /out/
-.MF
+/META-INF/
+*.MF
+*.txt
+*.data
+*.test
